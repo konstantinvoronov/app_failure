@@ -444,7 +444,7 @@ dependencies:
 Then:
 
 ```dart
-import 'package:stateful_data/app_failure.dart';
+import 'package:app_failure/app_failure.dart';
 ```
 
 ---
