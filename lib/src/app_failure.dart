@@ -1,3 +1,16 @@
+import 'failure_types/http_failure/http_failure_request_model.dart';
+import 'failure_types/http_failure/http_failure_response_model.dart';
+import 'failure_types/http_failure/http_failure_kind.dart';
+
+part 'failure_types/validation_failure.dart';
+part 'failure_types/http_failure/http_failure.dart';
+part 'failure_types/api_failure.dart';
+part 'failure_types/repository_failure.dart';
+part 'failure_types/performance_failure.dart';
+part 'failure_types/permission_failure.dart';
+part 'failure_types/controller_failure.dart';
+part 'failure_types/unhandled_failure.dart';
+
 /// Core failure model for the `app_failure` package.
 ///
 /// This file defines [AppFailure], the shared failure contract used across
@@ -18,20 +31,6 @@
 ///
 /// This allows the UI to process a high-level failure while logs, reports,
 /// and diagnostics still contain the full root-cause chain.
-
-import 'failure_types/http_failure/http_failure_request_model.dart';
-import 'failure_types/http_failure/http_failure_response_model.dart';
-import 'failure_types/http_failure/http_failure_kind.dart';
-
-
-part 'failure_types/validation_failure.dart';
-part 'failure_types/http_failure/http_failure.dart';
-part 'failure_types/api_failure.dart';
-part 'failure_types/repository_failure.dart';
-part 'failure_types/performance_failure.dart';
-part 'failure_types/permission_failure.dart';
-part 'failure_types/controller_failure.dart';
-part 'failure_types/unhandled_failure.dart';
 
 /// Describes how severe a failure is for the application flow.
 enum FatalLevel {
@@ -89,15 +88,14 @@ sealed class AppFailure {
 
   const AppFailure._({
     required this.logMessage,
-    String? this.uiMessage,
+    this.uiMessage,
     AppFailure? cause,
     Object? error,
     this.stackTrace,
     this.fatalLevel = FatalLevel.nonFatal,
     this.showReportBugDialog,
-  })  : cause = error is AppFailure ? error as AppFailure : cause,
-        error = error is AppFailure ? null : error;
-
+  }) : cause = error is AppFailure ? error : cause,
+       error = error is AppFailure ? null : error;
 
   /// Creates an API-level failure.
   ///
@@ -123,7 +121,7 @@ sealed class AppFailure {
   ///
   /// In this example, the thrown `HttpFailure` becomes the `cause` of the
   /// returned `ApiFailure`.
-  factory AppFailure.ApiFailure({
+  factory AppFailure.apiFailure({
     String? uiMessage,
     String? logMessage,
     Object? cause,
@@ -138,7 +136,7 @@ sealed class AppFailure {
   /// Creates an unhandled failure from an unexpected raw error.
   ///
   /// Use this as the fallback when no more specific failure type applies.
-  factory AppFailure.UnhandledFailure({
+  factory AppFailure.unhandledFailure({
     String? uiMessage,
     String? logMessage,
     required Object error,
@@ -147,13 +145,12 @@ sealed class AppFailure {
     bool? showReportBugDialog,
   }) = UnhandledFailure;
 
-
   /// Creates an HTTP-level failure without depending on a concrete HTTP client.
   ///
   /// Technology-specific packages such as Dio adapters should map their own
   /// request/response objects into [HttpFailureRequestModel] and
   /// [HttpFailureResponseModel].
-  factory AppFailure.HttpFailure({
+  factory AppFailure.httpFailure({
     String? uiMessage,
     String? logMessage,
     AppFailure? cause,
@@ -167,12 +164,11 @@ sealed class AppFailure {
     FatalLevel fatalLevel,
   }) = HttpFailure;
 
-
   /// Creates a repository/use-case-level failure.
   ///
   /// Use this when a repository operation fails. Preserve lower-level failures
   /// as [cause].
-  factory AppFailure.RepositoryFailure({
+  factory AppFailure.repositoryFailure({
     String? uiMessage,
     String? logMessage,
     Object? cause,
@@ -184,7 +180,7 @@ sealed class AppFailure {
   /// Creates a ui- controller/ failure.
   ///
   /// Use this when a feature flow or controller operation cannot complete.
-  factory AppFailure.ControllerFailure({
+  factory AppFailure.controllerFailure({
     String? uiMessage,
     required String logMessage,
     Object? cause,
@@ -198,19 +194,20 @@ sealed class AppFailure {
   /// Use this when data does not match the contract expected by the current
   /// layer. This includes form validation, domain validation, and mapper
   /// conversion failures caused by invalid external data.
-  factory AppFailure.ValidationFailure(String uiMessage) = ValidationFailure;
+  factory AppFailure.validationFailure(String uiMessage) = ValidationFailure;
 
   /// Creates a permission failure.
   ///
   /// Use this when an operation cannot continue because permission is denied,
   /// restricted, missing, or permanently denied.
-  factory AppFailure.PermissionFailure(String uiMessage) = ValidationFailure;
+  factory AppFailure.permissionFailure(String uiMessage) = ValidationFailure;
 
   /// Creates a performance failure.
   ///
   /// Use this when an operation takes longer than expected or violates a
   /// performance threshold.
-  factory AppFailure.PerformanceFailure(String text, {StackTrace? stackTrace,}) = PerformanceFailure;
+  factory AppFailure.performanceFailure(String text, {StackTrace? stackTrace}) =
+      PerformanceFailure;
 
   @override
   bool operator ==(Object other) {
@@ -223,12 +220,8 @@ sealed class AppFailure {
   }
 
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    uiMessage,
-    logMessage,
-    fatalLevel,
-  );
+  int get hashCode =>
+      Object.hash(runtimeType, uiMessage, logMessage, fatalLevel);
 
   @override
   String toString() {
@@ -281,14 +274,14 @@ sealed class AppFailure {
     if (raw is AppFailure) return raw;
 
     if (raw is Exception) {
-      return AppFailure.UnhandledFailure(
+      return AppFailure.unhandledFailure(
         error: raw,
         logMessage: raw.toString(),
         stackTrace: StackTrace.current,
       );
     }
     if (raw != null) {
-      return AppFailure.UnhandledFailure(
+      return AppFailure.unhandledFailure(
         error: raw,
         logMessage: 'unknown cause type',
         stackTrace: StackTrace.current,

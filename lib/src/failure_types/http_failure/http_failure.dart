@@ -14,20 +14,15 @@ final class HttpFailure extends AppFailure {
     bool? showReportBugDialog,
     FatalLevel fatalLevel = FatalLevel.nonFatal,
   }) : super._(
-    uiMessage: uiMessage,
-    logMessage: 'HttpFailure: ${logMessage ?? ''}\n${_composeHttp(
-      request: request,
-      response: response,
-      failureKind: failureKind,
-      debugDescription: debugDescription,
-      error: error,
-    )}',
-    cause: cause,
-    error: error,
-    stackTrace: stackTrace,
-    showReportBugDialog: showReportBugDialog,
-    fatalLevel: fatalLevel,
-  );
+         uiMessage: uiMessage,
+         logMessage:
+             'HttpFailure: ${logMessage ?? ''}\n${_composeHttp(request: request, response: response, failureKind: failureKind, debugDescription: debugDescription, error: error)}',
+         cause: cause,
+         error: error,
+         stackTrace: stackTrace,
+         showReportBugDialog: showReportBugDialog,
+         fatalLevel: fatalLevel,
+       );
 
   final HttpFailureRequestModel request;
   final HttpFailureResponseModel? response;
@@ -44,8 +39,7 @@ final class HttpFailure extends AppFailure {
     String? debugDescription,
     Object? error,
   }) {
-    final b = StringBuffer()
-      ..write(request.toLogString());
+    final b = StringBuffer()..write(request.toLogString());
 
     final responseLog = response?.toLogString().trim();
     if (responseLog != null && responseLog.isNotEmpty) {

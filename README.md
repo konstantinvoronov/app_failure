@@ -398,7 +398,7 @@ Use a state with an explicit `failure` field and a `copyWith`.
       };
     }
 ```
-
+  
 ## Why use app_failure?
 
 As Flutter applications grow, error handling often becomes inconsistent:
@@ -432,6 +432,32 @@ The package helps teams standardize:
 
 without tightly coupling application logic to exception types or infrastructure details.
 
+---
+
+## 📦 Installation
+
+```yaml
+dependencies:
+  app_failure: ^1.0.1
+```
+
+Then:
+
+```dart
+import 'package:stateful_data/app_failure.dart';
+```
+
+---
+
+## 📘 Documentation & Sources
+
+- **Repository:** https://github.com/konstantinvoronov/app_failure
+- **Issue Tracker:** https://github.com/konstantinvoronov/app_failure/issues
+- **Homepage:** https://github.com/konstantinvoronov/app_failure
+
+More docs and layer-specific examples (repositories, controllers, UI) will be added over time.
+
+---
 
 ## 🧑‍💻 Author
 
@@ -446,9 +472,4 @@ Email: `me@konstantinvoronov.com`
 
 If you find this package useful, please consider giving it a ⭐ on GitHub.
 
-##
-##
-##
-##
-##
 

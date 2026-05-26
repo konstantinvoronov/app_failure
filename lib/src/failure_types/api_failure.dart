@@ -73,7 +73,7 @@ part of '../app_failure.dart';
 /// Dio-specific methods like `toHttpFailureRequestModel`,
 /// `toHttpFailureResponseModel`, and `toHttpFailure` live in a Dio
 /// adapter extension, not in the core `app_failure` package.
-/// 
+///
 final class ApiFailure extends AppFailure {
   /// Creates an API-layer failure from dependency-free HTTP request/response
   /// data.
@@ -97,24 +97,21 @@ final class ApiFailure extends AppFailure {
     required StackTrace stackTrace,
     FatalLevel? fatalLevel,
     bool? showReportBugDialog,
-  })  : request = request ?? _extractRequest(cause),
-        response = response ?? _extractResponse(cause),
-        super._(
-        uiMessage: uiMessage,
-        logMessage: 'ApiFailure: ${logMessage ?? ''}\n${_composeApi(
-          request: request ?? _extractRequest(cause),
-          response: response ?? _extractResponse(cause),
-          error: error,
-        )}',
-        cause: AppFailure.extractCause(cause),
-        error: error,
-        stackTrace: stackTrace,
-        fatalLevel: fatalLevel ?? FatalLevel.nonFatal,
-        showReportBugDialog: showReportBugDialog,
-      );
+  }) : request = request ?? _extractRequest(cause),
+       response = response ?? _extractResponse(cause),
+       super._(
+         uiMessage: uiMessage,
+         logMessage:
+             'ApiFailure: ${logMessage ?? ''}\n${_composeApi(request: request ?? _extractRequest(cause), response: response ?? _extractResponse(cause), error: error)}',
+         cause: AppFailure.extractCause(cause),
+         error: error,
+         stackTrace: stackTrace,
+         fatalLevel: fatalLevel ?? FatalLevel.nonFatal,
+         showReportBugDialog: showReportBugDialog,
+       );
 
   /// Request snapshot used by the API call.
-  final HttpFailureRequestModel request;
+  final HttpFailureRequestModel? request;
 
   /// Optional response snapshot returned by the remote API.
   final HttpFailureResponseModel? response;
@@ -125,14 +122,12 @@ final class ApiFailure extends AppFailure {
   /// Response body from [response], if available.
   Object? get responseBody => response?.body;
 
-  static HttpFailureRequestModel _extractRequest(Object? cause) {
+  static HttpFailureRequestModel? _extractRequest(Object? cause) {
     if (cause is HttpFailure) {
       return cause.request;
     }
 
-    throw ArgumentError(
-      'ApiFailure requires request when cause is not HttpFailure.',
-    );
+    return null;
   }
 
   static HttpFailureResponseModel? _extractResponse(Object? cause) {
@@ -144,11 +139,11 @@ final class ApiFailure extends AppFailure {
   }
 
   static String _composeApi({
-    required HttpFailureRequestModel request,
+    required HttpFailureRequestModel? request,
     HttpFailureResponseModel? response,
     Object? error,
   }) {
-    final b = StringBuffer()..write(request.toLogString());
+    final b = StringBuffer()..write(request?.toLogString()??'Request was not passed');
 
     final responseLog = response?.toLogString().trim();
     if (responseLog != null && responseLog.isNotEmpty) {

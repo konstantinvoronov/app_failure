@@ -1,6 +1,10 @@
 name: app_failure
 description: Declarative failure handling for Dart and Flutter apps with layered cause chains and processing intent.
-version: 0.1.1
+version: 1.0.1
+
+repository: https://github.com/konstantinvoronov/app_failure
+issue_tracker: https://github.com/konstantinvoronov/app_failure/issues
+homepage: https://github.com/konstantinvoronov/app_failure
 
 environment:
   sdk: ">=3.0.0 <4.0.0"

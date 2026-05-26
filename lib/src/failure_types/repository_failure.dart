@@ -11,7 +11,8 @@ final class RepositoryFailure extends AppFailure {
     bool? showReportBugDialog,
   }) : super._(
          uiMessage: uiMessage,
-         logMessage: 'Repository exception: ${logMessage ?? ''} ${error.toString()}',
+         logMessage:
+             'Repository exception: ${logMessage ?? ''} ${error.toString()}',
          cause: AppFailure.extractCause(cause),
          error: error,
          stackTrace: stackTrace,

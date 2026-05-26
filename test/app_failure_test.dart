@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   group('AppFailure', () {
     test('moves AppFailure passed as error into cause', () {
-      final httpFailure = AppFailure.HttpFailure(
+      final httpFailure = AppFailure.httpFailure(
         logMessage: 'HTTP request failed',
         request: HttpFailureRequestModel(
           method: 'GET',
@@ -15,9 +15,9 @@ void main() {
         fatalLevel: FatalLevel.nonFatal,
       );
 
-      final apiFailure = AppFailure.ApiFailure(
+      final apiFailure = AppFailure.apiFailure(
         logMessage: 'API processing failed',
-        error: httpFailure,
+        cause: httpFailure,
         stackTrace: StackTrace.current,
       );
 
@@ -28,7 +28,7 @@ void main() {
     test('keeps raw exception as error', () {
       final exception = Exception('Something failed');
 
-      final failure = AppFailure.ApiFailure(
+      final failure = AppFailure.apiFailure(
         logMessage: 'API processing failed',
         error: exception,
         stackTrace: StackTrace.current,
@@ -39,17 +39,17 @@ void main() {
     });
 
     test('prints cause chain in diagnostic string', () {
-      final validationFailure = AppFailure.ValidationFailure(
+      final validationFailure = AppFailure.validationFailure(
         'Invalid API data',
       );
 
-      final apiFailure = AppFailure.ApiFailure(
+      final apiFailure = AppFailure.apiFailure(
         logMessage: 'API response could not be processed',
         error: validationFailure,
         stackTrace: StackTrace.current,
       );
 
-      final repositoryFailure = AppFailure.RepositoryFailure(
+      final repositoryFailure = AppFailure.repositoryFailure(
         logMessage: 'Repository failed to load data',
         cause: apiFailure,
         stackTrace: StackTrace.current,

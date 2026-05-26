@@ -74,9 +74,9 @@ sealed class AppResult<T> {
   /// );
   /// ```
   R fold<R>(
-      R Function(T data) onSuccess,
-      R Function(AppFailure failure) onFailure,
-      ) {
+    R Function(T data) onSuccess,
+    R Function(AppFailure failure) onFailure,
+  ) {
     return switch (this) {
       AppSuccess<T>(:final data) => onSuccess(data),
       AppFailureResult<T>(:final failure) => onFailure(failure),

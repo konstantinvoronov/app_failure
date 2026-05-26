@@ -55,10 +55,7 @@ final class ValidationFailure extends AppFailure {
   /// Use this constructor when the failure can be shown directly to the user
   /// and no additional debugging context is required.
   ValidationFailure(String message)
-      : super._(
-    uiMessage: message,
-    logMessage: '',
-  );
+    : super._(uiMessage: message, logMessage: '');
 
   /// Creates a validation failure with full processing/debug context.
   ///
@@ -77,12 +74,12 @@ final class ValidationFailure extends AppFailure {
     FatalLevel fatalLevel = FatalLevel.nonFatal,
     bool? showReportBugDialog,
   }) : super._(
-    uiMessage: uiMessage,
-    logMessage: logMessage,
-    cause: cause,
-    error: error,
-    stackTrace: stackTrace,
-    fatalLevel: fatalLevel,
-    showReportBugDialog: showReportBugDialog,
-  );
+         uiMessage: uiMessage,
+         logMessage: logMessage,
+         cause: cause,
+         error: error,
+         stackTrace: stackTrace,
+         fatalLevel: fatalLevel,
+         showReportBugDialog: showReportBugDialog,
+       );
 }
